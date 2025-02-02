@@ -10,8 +10,10 @@ import { HttpClient } from '@angular/common/http';
   template: `
     <h1>Todo List</h1>
 
+    <!-- visible if length of array todos is 0, then is empty -->
     <div *ngIf="noTodos()">Non ci sono todos in lista</div>
     <hr />
+    <!-- addTodo method is triggered when enter key is pressed, the event is provided -->
     <input type="text" (keydown.enter)="addTodo($event)" />
     <hr />
     <!-- metodo per togglare il completed passando tutto il todo -->
@@ -37,6 +39,7 @@ import { HttpClient } from '@angular/common/http';
     <!-- metodo per togglare il todo in un server tramite chiamata PATCH -->
     <li *ngFor="let todo of todos()">
       {{ todo.title }}
+      <!-- if i check/uncheck the check box i call toggleTodo method, this set to true or false the todo property completed -->
       <input
         type="checkbox"
         [checked]="todo.completed"
@@ -45,6 +48,7 @@ import { HttpClient } from '@angular/common/http';
       <button (click)="deleteTodo(todo)">X</button>
     </li>
 
+    <!-- html pre element, used pipe async to show on screen data -->
     <pre>{{ todos() | json }}</pre>
   `,
   styles: [],
@@ -74,12 +78,15 @@ export class Demo3Component {
   todos = signal<Todo[]>([]);
 
   ngOnInit() {
+    // http request to achieve todos data and assign them to todos signal through signal method .set()
     this.http.get<Todo[]>('http://localhost:3000/todos').subscribe((c) => {
       this.todos.set(c);
     });
   }
 
   addTodo(event: Event) {
+    // save in a const the value of input tag
+    // i need to declare the element html what type is
     const target: HTMLInputElement = event.target as HTMLInputElement;
 
     // const newTodo: Todo = {
@@ -89,10 +96,13 @@ export class Demo3Component {
     // };
 
     this.http
+      // post request to save todo in BE
       .post<Todo>('http://localhost:3000/todos', {
         title: target.value,
         completed: false,
       })
+      // on subscribe i take the new todo from BE response and this is added to todos signal array through spread syntax
+      // in ths way is possible to show it on screen
       .subscribe((newTodo) =>
         this.todos.update((todos) => {
           return [...todos, newTodo];
@@ -103,6 +113,7 @@ export class Demo3Component {
     //   return [...todos, newTodo];
     // });
 
+    // setting input tag to empty string
     target.value = '';
   }
 
@@ -132,6 +143,7 @@ export class Demo3Component {
       .subscribe((toggledTodo) => {
         this.todos.update((todos) => {
           return todos.map((t) => {
+            // l'id del todo nell'array vecchio è uguale a quello del todo cambiato? si? prendi il todo cambiato. no? prendi il todo vecchio
             return t.id === toggledTodo.id ? toggledTodo : t;
           });
         });
