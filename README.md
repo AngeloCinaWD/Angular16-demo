@@ -6,6 +6,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 standalone component, inject(), provideRouter(routes), provideHttpClient(), signal(), computed(), effect(), json-server
 
+ng new progetto -s -t -S (style inline, template inline, Skiptest)
+
 [optional chaining operator](https://javascript.info/optional-chaining)
 [optional chaining operator 2](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
 [html pre tag](http://www.w3schools.com/TAGs/tag_pre.asp)
